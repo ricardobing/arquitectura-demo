@@ -18,6 +18,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  
+  // En la página de inicio, el navbar es transparente. En otras páginas siempre es blanco
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,10 +31,13 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Determinar si el navbar debe tener fondo blanco
+  const hasWhiteBackground = !isHomePage || scrolled;
+
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-lg' : 'bg-transparent'
+        hasWhiteBackground ? 'bg-white shadow-lg' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,7 +47,7 @@ export default function Navbar() {
             <motion.div
               whileHover={{ scale: 1.05 }}
               className={`text-2xl font-bold tracking-tight ${
-                scrolled ? 'text-gray-900' : 'text-white'
+                hasWhiteBackground ? 'text-gray-900' : 'text-white'
               }`}
             >
               ARCHISTUDIO
@@ -56,10 +62,10 @@ export default function Navbar() {
                   whileHover={{ y: -2 }}
                   className={`text-sm font-medium transition-colors cursor-pointer ${
                     pathname === item.href
-                      ? scrolled
+                      ? hasWhiteBackground
                         ? 'text-gray-900 border-b-2 border-gray-900'
                         : 'text-white border-b-2 border-white'
-                      : scrolled
+                      : hasWhiteBackground
                       ? 'text-gray-600 hover:text-gray-900'
                       : 'text-gray-200 hover:text-white'
                   }`}
@@ -74,7 +80,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`${scrolled ? 'text-gray-900' : 'text-white'}`}
+              className={`${hasWhiteBackground ? 'text-gray-900' : 'text-white'}`}
             >
               {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
